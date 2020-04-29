@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.UserDao">
+    <cache/>
+    <resultMap id="userMapper" type="User">
+        <result property="uid" column="id"></result>
+        <result property="uusername" column="username"></result>
+        <result property="ubirthday" column="birthday"></result>
+        <result property="usex" column="sex"></result>
+        <result property="address" column="address"></result>
+    </resultMap>
+    <sql id="sql"> select * from user</sql>
+    <select id="findAllUser" resultMap="userMapper" useCache="true">
+        <include refid="sql"></include>
+    </select>
+    <select id="moHuChaXun" resultMap="userMapper" parameterType="User">
+        <include refid="sql"></include>
+        <where>
+            <if test="uusername!=null and uusername.length()>0">
+                username like #{uusername}
+            </if>
+            <if test="address!=null and address.length()>0">
+                and address like #{address}
+            </if>
+        </where>
+
+    </select>
+    <delete id="delete" parameterType="int">
+        delete from user
+        <where>
+            <foreach collection="list" item="id" separator="," open="id IN(" close=")">
+                #{id}
+            </foreach>
+        </where>
+    </delete>
+</mapper>
